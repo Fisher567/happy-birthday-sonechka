@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="darkreader-lock">
+<meta name="theme-color" content="#1a1029" id="tc">
+<title>С днём рождения, Сонечка!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Marck+Script&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{color-scheme:light dark;
+    --bg:#1a1029; --bg2:#241538; --pink:#ff7eb6; --blue:#7ad7ff; --violet:#b69cff;
+    --text:#e9defa; --dim:#8e7aa8; --green:#8dffb0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{min-height:100%;background:var(--bg);color:var(--text)}
+  html{overflow-x:hidden}
+  body{font-family:'Nunito',sans-serif;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  .screen{position:fixed;inset:0;display:none}
+  .screen.on{display:flex}
+
+  /* ---------- START ---------- */
+  #start{flex-direction:column;align-items:center;justify-content:center;gap:22px;cursor:pointer;
+    background:radial-gradient(circle at 50% 40%,#2e1a4a 0%,var(--bg) 70%);font-family:'JetBrains Mono',monospace;text-align:center;padding:24px}
+  #start .logo{font-size:56px;filter:drop-shadow(0 0 18px var(--pink));animation:beat 1.4s infinite}
+  #start .hint{font-size:15px;color:var(--blue);letter-spacing:.5px}
+  #start .hint b{color:var(--pink)}
+  #start .small{font-size:12px;color:var(--dim)}
+  @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}45%{transform:scale(1.1)}}
+
+  /* ---------- TERMINAL ---------- */
+  #term{align-items:center;justify-content:center;padding:14px;background:radial-gradient(circle at 30% 20%,#2b1845,var(--bg) 75%)}
+  .window{width:100%;max-width:560px;height:min(78dvh,640px);background:rgba(20,12,34,.92);border:1px solid #3d2a5c;border-radius:14px;
+    box-shadow:0 0 0 1px rgba(255,126,182,.08),0 20px 60px rgba(0,0,0,.6),0 0 60px rgba(182,156,255,.15);display:flex;flex-direction:column;overflow:hidden}
+  .bar{display:flex;align-items:center;gap:7px;padding:10px 12px;background:#251838;border-bottom:1px solid #3d2a5c}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .bar .t{flex:1;text-align:center;font:12px 'JetBrains Mono',monospace;color:var(--dim);margin-right:40px}
+  #out{flex:1;overflow-y:auto;padding:14px 14px 20px;font:13px/1.65 'JetBrains Mono',monospace;white-space:pre-wrap;word-break:break-word}
+  #out .p{color:var(--green)} #out .c{color:var(--blue)} #out .k{color:var(--pink)} #out .d{color:var(--dim)} #out .y{color:#ffd479}
+  .cur{display:inline-block;width:8px;height:15px;background:var(--pink);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ---------- RAIN ---------- */
+  #rain{background:#0d0716}
+  #rain canvas{width:100%;height:100%;display:block}
+
+  /* ---------- CRASH ---------- */
+  #crash{flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;
+    background:#12060f;font-family:'JetBrains Mono',monospace;animation:shake .25s infinite}
+  #crash .big{font-size:28px;font-weight:700;color:#ff4f7e;position:relative;line-height:1.25}
+  #crash .big::before,#crash .big::after{content:attr(data-t);position:absolute;inset:0}
+  #crash .big::before{color:#7ad7ff;transform:translate(-3px,0);clip-path:inset(0 0 55% 0);animation:g1 .4s infinite alternate}
+  #crash .big::after{color:#ff7eb6;transform:translate(3px,0);clip-path:inset(50% 0 0 0);animation:g2 .3s infinite alternate}
+  #crash .info{font-size:12.5px;color:#d9a5c0;line-height:1.7;max-width:420px}
+  #crash .info span{color:#ffd479}
+  #crash .reb{font-size:14px;color:var(--blue);margin-top:8px}
+  @keyframes g1{to{transform:translate(4px,-2px);clip-path:inset(10% 0 40% 0)}}
+  @keyframes g2{to{transform:translate(-4px,2px);clip-path:inset(60% 0 5% 0)}}
+  @keyframes shake{0%{transform:translate(0)}25%{transform:translate(-2px,1px)}50%{transform:translate(2px,-1px)}75%{transform:translate(-1px,-2px)}}
+  .flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:50;transition:opacity .35s}
+  .flash.on{opacity:1}
+
+  /* ---------- CARD ---------- */
+  #card{display:none;position:relative;min-height:100dvh;flex-direction:column;align-items:center;
+    background:linear-gradient(160deg,#ffe3ec 0%,#ffeede 35%,#efe4ff 70%,#e1f1ff 100%);color:#5a3d5c;padding:34px 0 50px;overflow:hidden}
+  #card.on{display:flex;animation:fadeIn 1.2s ease}
+  html.light,html.light body{background:#ffe9ef}
+  #card,#card *{forced-color-adjust:none}
+  @keyframes fadeIn{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:none}}
+  .float{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+  .float span{position:absolute;bottom:-40px;animation:up linear forwards;opacity:.75}
+  @keyframes up{to{transform:translateY(-115vh) rotate(var(--r));opacity:0}}
+  .wrap{position:relative;z-index:1;width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center}
+  .badge{font:700 12px 'JetBrains Mono',monospace;background:#fff;color:#c2508a;padding:6px 12px;border-radius:99px;
+    box-shadow:0 4px 14px rgba(194,80,138,.15);letter-spacing:.3px}
+  h1{font-family:'Marck Script',cursive;font-weight:400;font-size:clamp(44px,13vw,64px);line-height:1.05;text-align:center;margin:18px 20px 6px;
+    background:linear-gradient(90deg,#e0559a,#b26cf0,#5fa8ff);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 2px 0 rgba(255,255,255,.6))}
+  .sub{font-size:15px;color:#8a6a8c;text-align:center;padding:0 24px}
+
+  .gallery{width:100%;display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px calc(50% - 130px) 14px;scrollbar-width:none}
+  .gallery::-webkit-scrollbar{display:none}
+  .ph{flex:0 0 260px;scroll-snap-align:center;background:#fff;border-radius:18px;padding:10px 10px 14px;
+    box-shadow:0 10px 30px rgba(140,80,140,.18);transition:transform .3s}
+  .ph img{width:100%;height:330px;object-fit:cover;border-radius:12px;display:block}
+  .ph p{font-size:14px;text-align:center;margin-top:10px;color:#6b4a6e;font-weight:600;line-height:1.35}
+  .dots{display:flex;gap:6px;margin-bottom:6px}
+  .dots i{width:7px;height:7px;border-radius:50%;background:#e2bfd6;transition:.3s}
+  .dots i.a{background:#d9559a;width:20px;border-radius:5px}
+
+  .box{width:calc(100% - 32px);background:rgba(255,255,255,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.9);border-radius:22px;padding:22px 18px;margin-top:18px;box-shadow:0 8px 30px rgba(150,90,160,.12)}
+  .box h2{font-family:'Marck Script',cursive;font-weight:400;font-size:30px;text-align:center;color:#c2508a;margin-bottom:12px}
+  .cnt{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .cnt div{background:#fff;border-radius:14px;padding:10px 4px;text-align:center;box-shadow:0 3px 10px rgba(194,80,138,.08)}
+  .cnt b{display:block;font:700 26px 'JetBrains Mono',monospace;color:#b2509a}
+  .cnt small{font-size:11.5px;color:#9b7b9d}
+  .since{text-align:center;font-size:12.5px;color:#9b7b9d;margin-top:10px}
+  .msg{font-size:16.5px;line-height:1.65;color:#5a3d5c}
+  .msg p+p{margin-top:12px}
+  .sign{font-family:'Marck Script',cursive;font-size:30px;text-align:right;color:#b26cf0;margin-top:12px}
+
+  .btns{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;justify-content:center;padding:0 16px}
+  .btn{border:0;font:800 15px 'Nunito',sans-serif;padding:13px 20px;border-radius:99px;cursor:pointer;color:#fff;
+    background:linear-gradient(90deg,#ef6aa8,#b47cf5);box-shadow:0 6px 18px rgba(200,90,170,.35);transition:transform .15s}
+  .btn:active{transform:scale(.95)}
+  .btn.ghost{background:#fff;color:#b2509a;box-shadow:0 4px 12px rgba(200,90,170,.15)}
+  .foot{font:11px 'JetBrains Mono',monospace;color:#b49ab6;margin-top:22px;text-align:center}
+  #conf{position:fixed;inset:0;pointer-events:none;z-index:40;width:100%;height:100%}
+</style>
+</head>
+<body>
+
+<!-- 0. старт -->
+<div id="start" class="screen on">
+  <div class="logo">💜</div>
+  <div class="hint">&gt; входящий файл: <b>for_sonechka.exe</b></div>
+  <div class="hint">[ нажми, чтобы запустить ]<span class="cur"></span></div>
+  <div class="small">лучше со звуком сердца 🙂</div>
+</div>
+
+<!-- 1. терминал -->
+<div id="term" class="screen">
+  <div class="window">
+    <div class="bar"><span class="dot" style="background:#ff6b8b"></span><span class="dot" style="background:#ffd479"></span><span class="dot" style="background:#8dffb0"></span>
+      <div class="t">dima@love-os: ~</div></div>
+    <div id="out"></div>
+  </div>
+</div>
+
+<!-- 2. дождь -->
+<div id="rain" class="screen"><canvas id="rc"></canvas></div>
+
+<!-- 3. крэш -->
+<div id="crash" class="screen">
+  <div class="big" data-t="FATAL ERROR: too much love">FATAL ERROR: too much love</div>
+  <div class="info">
+    Kernel panic at <span>0x50NECHKA</span><br>
+    heart.buffer overflow — <span>чувств больше, чем памяти</span><br>
+    Процесс «спокойствие» завершён с кодом 💘
+  </div>
+  <div class="reb" id="reb">Перезагрузка в безопасном режиме...</div>
+</div>
+<div class="flash" id="flash"></div>
+
+<!-- 4. открытка -->
+<div id="card">
+  <div class="float" id="float"></div>
+  <div class="wrap">
+    <div class="badge">🎉 sonechka v19.0 released</div>
+    <h1>С днём рождения, Сонечка!</h1>
+    <div class="sub">Сегодня тебе 19, и мир стал ещё немного красивее 🐱💕</div>
+
+    <div class="gallery" id="gal">
+      <div class="ph"><img src="img/p1.jpg" alt=""><p>Воздушный поцелуй, который я ловлю до сих пор 💋</p></div>
+      <div class="ph"><img src="img/p3.jpg" alt=""><p>Главная героиня моего турецкого сериала 🎬</p></div>
+      <div class="ph"><img src="img/p4.jpg" alt=""><p>Даже сакура рядом с тобой теряется 🌸</p></div>
+      <div class="ph"><img src="img/p2.jpg" alt=""><p>Один этот взгляд — и у меня compile error 🙈</p></div>
+      <div class="ph"><img src="img/p5.jpg" alt=""><p>Закат красивый. Но ты — красивее 🌅</p></div>
+    </div>
+    <div class="dots" id="dots"></div>
+
+    <div class="box">
+      <h2>Мы вместе уже</h2>
+      <div class="cnt">
+        <div><b id="cd">0</b><small>дней</small></div>
+        <div><b id="ch">0</b><small>часов</small></div>
+        <div><b id="cm">0</b><small>минут</small></div>
+        <div><b id="cs">0</b><small>секунд</small></div>
+      </div>
+      <div class="since">с 31 октября, 19:00 — и это только начало 💫</div>
+    </div>
+
+    <div class="box">
+      <div class="msg" id="msg">
+        <p>Котёнок, с днём рождения! 🎂</p>
+        <p>Мы вместе всего две недели, а ты уже успела сделать мои дни теплее, а меня — счастливее. Я правда рад, что ты появилась в моей жизни.</p>
+        <p>Желаю тебе как можно больше поводов улыбаться, уютных вечеров под любимые сериалы, котиков рядом и людей, которые тебя ценят. Пусть твои 19 будут самым ярким годом — а я постараюсь сделать их ещё лучше.</p>
+      </div>
+      <div class="sign">Твой Дима 💜</div>
+    </div>
+
+    <div class="btns">
+      <button class="btn" id="more">🎉 Ещё конфетти</button>
+      <button class="btn ghost" id="again">↺ Запустить заново</button>
+    </div>
+    <div class="foot">// compiled with love · 14.11.2026</div>
+  </div>
+</div>
+<canvas id="conf"></canvas>
+
+<script>
+const $=s=>document.querySelector(s);
+const show=id=>{document.querySelectorAll('.screen').forEach(e=>e.classList.remove('on'));$('#card').classList.remove('on');
+  const el=$('#'+id); el.classList.add('on');};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let fast=false;
+
+/* ---------- ТЕРМИНАЛ ---------- */
+const out=$('#out');
+const script=[
+  ['p','$ ','c','sudo ./birthday_protocol.sh --for="Сонечка"'],
+  ['d','[sudo] пароль для dima: ********'],
+  ['',''],
+  ['k','> ','','Инициализация birthday_protocol ','y','v19.0'],
+  ['k','> ','','Поиск самой красивой девушки ......... ','p','найдена ✓'],
+  ['k','> ','','Загрузка котики.dll ................... ','p','[OK] 🐱'],
+  ['k','> ','','Импорт турецких сериалов .............. ','p','999+ серий ✓'],
+  ['k','> ','','Проверка возраста: age++ → ','y','19 ','p','[OK]'],
+  ['k','> ','','Синхронизация с «котёнок» .............. ','p','[OK]'],
+  ['',''],
+  ['k','> ','','Взлом сердца: ','BAR'],
+  ['k','> ','','Уровень любви: ','LOVE'],
+];
+function line(){const d=document.createElement('div');out.appendChild(d);return d}
+const cursor=document.createElement('span');cursor.className='cur';
+async function type(el,cls,text,speed){
+  const s=document.createElement('span');if(cls)s.className=cls;el.appendChild(s);el.appendChild(cursor);
+  for(const ch of text){s.textContent+=ch;out.scrollTop=out.scrollHeight;await sleep(fast?2:speed)}
+}
+async function runTerm(){
+  show('term');out.innerHTML='';fast=false;
+  await sleep(400);
+  for(const row of script){
+    const el=line();
+    for(let i=0;i<row.length;i+=2){
+      const cls=row[i],txt=row[i+1];
+      if(cls==='BAR'){
+        const s=document.createElement('span');s.className='k';el.appendChild(s);el.appendChild(cursor);
+        for(let p=0;p<=10;p++){s.textContent='['+'█'.repeat(p)+'░'.repeat(10-p)+'] '+p*10+'%';await sleep(fast?20:140)}
+        continue;
+      }
+      if(cls==='LOVE'){
+        const s=document.createElement('span');s.className='k';el.appendChild(s);el.appendChild(cursor);
+        for(const v of [42,67,87,99,100,120,180,300,999]){s.textContent=v+'%';await sleep(fast?40:(v>=100?260:200))}
+        s.textContent='∞%  ⚠ переполнение';continue;
+      }
+      await type(el,cls,txt,row[0]==='p'&&i===2?45:22);
+    }
+    await sleep(fast?30:(row[1]===''?120:330));
+  }
+  await sleep(900);
+  runRain();
+}
+$('#term').addEventListener('click',()=>fast=true);
+
+/* ---------- ДОЖДЬ ---------- */
+function runRain(){
+  show('rain');
+  const c=$('#rc'),x=c.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2);
+  const W=c.width=innerWidth*dpr,H=c.height=innerHeight*dpr;
+  const fs=16*dpr,cols=Math.ceil(W/fs),drops=Array.from({length:cols},()=>Math.random()*-H/fs);
+  const sym='01アイウエオカキクケコСОНЯ<>/{}$#';
+  const t0=performance.now(),DUR=4200;
+  x.fillStyle='#0d0716';x.fillRect(0,0,W,H);
+  function frame(now){
+    const k=Math.min((now-t0)/DUR,1);
+    x.fillStyle='rgba(13,7,22,.14)';x.fillRect(0,0,W,H);
+    x.font=fs+'px JetBrains Mono, monospace';
+    for(let i=0;i<cols;i++){
+      const heart=Math.random()<k*k*1.1;
+      const ch=heart?(Math.random()<.5?'♥':'❤'):sym[Math.random()*sym.length|0];
+      x.fillStyle=heart?(Math.random()<.5?'#ff7eb6':'#ff4f9a'):(Math.random()<.5?'#7ad7ff':'#b69cff');
+      x.fillText(ch,i*fs,drops[i]*fs);
+      if(drops[i]*fs>H&&Math.random()>.95)drops[i]=0;
+      drops[i]+=1;
+    }
+    if(k>.8){x.fillStyle=`rgba(255,126,182,${(k-.8)*0.25})`;x.fillRect(0,0,W,H)}
+    if(k<1)requestAnimationFrame(frame);else runCrash();
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ---------- КРЭШ ---------- */
+async function runCrash(){
+  show('crash');const r=$('#reb');
+  r.textContent='Перезагрузка в безопасном режиме...';
+  await sleep(1600);
+  for(const n of [3,2,1]){r.textContent='Перезагрузка через '+n+'...';await sleep(650)}
+  const f=$('#flash');f.classList.add('on');await sleep(380);
+  document.querySelectorAll('.screen').forEach(e=>e.classList.remove('on'));
+  $('#card').classList.add('on');window.scrollTo(0,0);
+  document.documentElement.classList.add('light');$('#tc').setAttribute('content','#ffe3ec');
+  f.classList.remove('on');
+  startFloat();burst();setTimeout(burst,700);
+}
+
+/* ---------- СЧЁТЧИК ---------- */
+const START=new Date('2026-10-31T19:00:00+02:00');
+function tick(){
+  let s=Math.max(0,Math.floor((Date.now()-START)/1000));
+  $('#cd').textContent=Math.floor(s/86400);s%=86400;
+  $('#ch').textContent=Math.floor(s/3600);s%=3600;
+  $('#cm').textContent=Math.floor(s/60);
+  $('#cs').textContent=s%60;
+}
+tick();setInterval(tick,1000);
+
+/* ---------- ГАЛЕРЕЯ ---------- */
+const gal=$('#gal'),dots=$('#dots');
+[...gal.children].forEach(()=>dots.appendChild(document.createElement('i')));
+function upd(){
+  const mid=gal.scrollLeft+gal.clientWidth/2;let best=0,bd=1e9;
+  [...gal.children].forEach((p,i)=>{const d=Math.abs(p.offsetLeft+p.offsetWidth/2-mid);if(d<bd){bd=d;best=i}
+    p.style.transform=`scale(${1-Math.min(d/900,.08)}) rotate(${(i%2?1:-1)*Math.min(d/300,2)}deg)`});
+  [...dots.children].forEach((d,i)=>d.classList.toggle('a',i===best));
+}
+gal.addEventListener('scroll',upd,{passive:true});setTimeout(upd,50);
+
+/* ---------- ПАРЯЩИЕ СЕРДЕЧКИ ---------- */
+let floatOn=false;
+function startFloat(){
+  if(floatOn)return;floatOn=true;
+  const box=$('#float'),items=['💕','💗','🌸','🤍','💜','🐱','✨'];
+  setInterval(()=>{
+    const s=document.createElement('span');
+    s.textContent=items[Math.random()*items.length|0];
+    s.style.left=Math.random()*100+'%';s.style.fontSize=(14+Math.random()*16)+'px';
+    s.style.setProperty('--r',(Math.random()*120-60)+'deg');
+    s.style.animationDuration=(7+Math.random()*6)+'s';
+    box.appendChild(s);setTimeout(()=>s.remove(),13000);
+  },650);
+}
+
+/* ---------- КОНФЕТТИ ---------- */
+const cc=$('#conf'),cx=cc.getContext('2d');let parts=[],running=false;
+function size(){const d=Math.min(devicePixelRatio||1,2);cc.width=innerWidth*d;cc.height=innerHeight*d;cx.setTransform(d,0,0,d,0,0)}
+size();addEventListener('resize',size);
+function burst(){
+  const cols=['#ff7eb6','#b69cff','#7ad7ff','#ffd479','#8dffb0','#ff4f9a'];
+  for(let side of [0,1]) for(let i=0;i<90;i++){
+    const a=side?(-Math.PI*0.75+Math.random()*.5):(-Math.PI*0.25-Math.random()*.5);
+    const v=9+Math.random()*9;
+    parts.push({x:side?innerWidth:0,y:innerHeight*.75,vx:Math.cos(a)*v,vy:Math.sin(a)*v,
+      w:6+Math.random()*6,h:4+Math.random()*4,r:Math.random()*6,vr:(Math.random()-.5)*.3,
+      c:cols[Math.random()*cols.length|0],heart:Math.random()<.18,life:0});
+  }
+  if(!running){running=true;requestAnimationFrame(loop)}
+}
+function loop(){
+  cx.clearRect(0,0,innerWidth,innerHeight);
+  parts.forEach(p=>{p.vy+=.25;p.vx*=.985;p.vy*=.985;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.life++;
+    cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;
+    if(p.heart){cx.font='16px serif';cx.fillText('💖',-8,8)}else cx.fillRect(-p.w/2,-p.h/2,p.w,p.h*Math.abs(Math.cos(p.life*.1)));
+    cx.restore();});
+  parts=parts.filter(p=>p.y<innerHeight+40&&p.life<400);
+  if(parts.length)requestAnimationFrame(loop);else{running=false;cx.clearRect(0,0,innerWidth,innerHeight)}
+}
+
+/* ---------- КНОПКИ ---------- */
+$('#start').addEventListener('click',runTerm);
+$('#more').addEventListener('click',burst);
+$('#again').addEventListener('click',()=>{$('#card').classList.remove('on');document.documentElement.classList.remove('light');$('#tc').setAttribute('content','#1a1029');runTerm()});
+</script>
+</body>
+</html>
